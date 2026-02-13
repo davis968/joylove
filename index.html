@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Slideshow ❤️</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #ffcccc, #ff99cc);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: 36px;
+    color: #fff;
+    text-shadow: 2px 2px 5px #ff66aa;
+    text-align: center;
+}
+
+/* Slideshow container */
+.slideshow-container {
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    margin-top: 20px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255,0,150,0.6);
+}
+
+.slide {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.slide img {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 15px;
+    transition: transform 1s ease;
+}
+
+.slide:hover img {
+    transform: scale(1.02);
+}
+
+/* Caption animation */
+.caption {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(255, 0, 150, 0.6);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+    opacity: 0;
+    animation: slideUp 1s forwards 0.5s;
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Navigation arrows */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    padding: 8px 12px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 50%;
+    background: rgba(255,0,150,0.6);
+    user-select: none;
+    transform: translateY(-50%);
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* Floating hearts */
+.heart {
+    position: fixed;
+    bottom: -20px;
+    font-size: 16px;
+    color: pink;
+    animation: floatUp 8s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0) scale(0.8); opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
+}
+
+/* Music button */
+.music-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background: hotpink;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff66aa;
+}
+</style>
+</head>
+<body>
+
+<h1>Happy Valentine's Day ❤️</h1>
+
+<div class="slideshow-container" id="slideshow"></div>
+
+<!-- Music -->
+<button class="music-btn" onclick="toggleMusic()">🎵 Play/Pause Love Song</button>
+<audio id="bgMusic" loop>
+    <source src="love.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Array of images
+const images = [
+  'stickers/img1.jpg',
+  'stickers/img2.jpg',
+  'stickers/img3.jpg',
+  'stickers/img4.jpg',
+  'stickers/img5.jpeg',
+  'stickers/img6.jpeg',
+  'stickers/img7.jpeg',
+  'stickers/img8.jpeg',
+  'stickers/img9.jpeg',
+  'stickers/img10.jpeg',
+  'stickers/img11.jpeg'
+];
+
+// Optional captions
+const captions = [
+  "You make my heart happy 💕",
+  "Every moment with you is magic ✨",
+  "Forever and always ❤️",
+  "Roses are red, violets are blue 💌",
+  "You + Me = ❤️",
+  "Sweetest Valentine ever 🍫",
+  "My heart beats for you 💓",
+  "Hugs, kisses, and love 😘",
+  "Love is in the air 💖",
+  "You are my everything 🌹",
+  "To the moon and back 🚀"
+];
+
+const container = document.getElementById('slideshow');
+
+// Create slides
+images.forEach((src, index) => {
+  const slide = document.createElement('div');
+  slide.className = 'slide';
+  slide.innerHTML = `<img src="${src}" alt="Valentine Image">
+                     <div class="caption">${captions[index] || ''}</div>`;
+  container.appendChild(slide);
+});
+
+let slideIndex = 0;
+const slides = document.getElementsByClassName('slide');
+
+function showSlide(n) {
+    if (n >= slides.length) slideIndex = 0;
+    if (n < 0) slideIndex = slides.length - 1;
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    slides[slideIndex].style.display = "block";
+}
+
+// Initial slide
+showSlide(slideIndex);
+
+// Navigation arrows
+const prev = document.createElement('a');
+prev.className = 'prev';
+prev.innerHTML = '❮';
+prev.onclick = () => { slideIndex--; showSlide(slideIndex); };
+container.appendChild(prev);
+
+const next = document.createElement('a');
+next.className = 'next';
+next.innerHTML = '❯';
+next.onclick = () => { slideIndex++; showSlide(slideIndex); };
+container.appendChild(next);
+
+// Auto slideshow every 5 seconds
+setInterval(() => {
+    slideIndex++;
+    showSlide(slideIndex);
+}, 5000);
+
+// Floating hearts
+function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML = '❤';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.fontSize = (12 + Math.random() * 20) + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 8000);
+}
+setInterval(createHeart, 500);
+
+// Music toggle
+function toggleMusic() {
+    const music = document.getElementById('bgMusic');
+    if (music.paused) {
+        music.play();
+    } else {
+        music.pause();
+    }
+}
+</script>
+
+</body>
+</html>
